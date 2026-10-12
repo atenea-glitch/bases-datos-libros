@@ -1,0 +1,29 @@
+# =========================
+# IMPORTAR DATOS
+# =========================
+
+mongoimport --db biblioteca --collection libros --file libros.json --jsonArray
+
+# =========================
+# CONSULTAS
+# =========================
+
+# Libros publicados antes de 1950
+db.libros.find({ "anioPublicacion": { "$lt": 1950 } });
+
+# Libros del género Fantasía
+db.libros.find({ "genero": "Fantasía" });
+
+# Libros de J.R.R. Tolkien
+db.libros.find({ "autores": "J.R.R. Tolkien" });
+
+# Contar libros por género
+db.libros.aggregate([
+  { "$group": { "_id": "$genero", "total": { "$sum": 1 } } }
+]);
+
+# =========================
+# EXPORTAR DATOS
+# =========================
+
+mongoexport --db biblioteca --collection libros --query '{"genero": "Fantasía"}' --out libros_fantasia.json
